@@ -1,9 +1,7 @@
 from capture import Capture as cp
 
-import cv2 as cv
-import numpy as np
-import matplotlib.pyplot as plt
-import os
+import tensorflow as tf
+from tensorflow.keras.layers import Dense,Dropout,GlobalAveragePooling2D
 
 
 def Model():

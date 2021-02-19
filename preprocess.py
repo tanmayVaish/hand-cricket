@@ -13,7 +13,7 @@ one,two,three,four,five,none = data
 # images = [1,2,3,4,5,6,7,8.....,60] list of images!!
 
 
-class preprocess:        
+class Preprocess:        
 
     def convert(data):
         
@@ -49,7 +49,6 @@ class preprocess:
 
     def morphology(seg_images,images):
 
-        
         lst = []
         
         for i in range(len(seg_images)):
@@ -100,11 +99,11 @@ def Show(images):
 
 if __name__ == "__main__":
 
-    images = preprocess.convert(data)
+    images = Preprocess.convert(data)
     
-    blur_images = preprocess.gaussian(images) # contains list of images of all classess in ascending order
-    seg_images = preprocess.segmentation(images)
-    morph_images = preprocess.morphology(seg_images,images)
+    blur_images = Preprocess.gaussian(images) # contains list of images of all classess in ascending order
+    seg_images = Preprocess.segmentation(images)
+    morph_images = Preprocess.morphology(seg_images,images)
     
     Show(morph_images)
     
