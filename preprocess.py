@@ -4,12 +4,10 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
-data = cp.Collect()
-one,two,three,four,five,none = data
-
+#data = cp.Collect()
+#one,two,three,four,five,none = data
 
 # data = [one,two,three,four,five,none] list of classes of images 
-
 # images = [1,2,3,4,5,6,7,8.....,60] list of images!!
 
 

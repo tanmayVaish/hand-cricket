@@ -6,7 +6,7 @@ import os
 
 class Capture:
         
-    def Collect(num_samples = 10):
+    def Collect(num_samples):
         
         global one,two,three,four,five,none
         capture = cv.VideoCapture(0)
