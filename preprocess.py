@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 num_samples = 5
 
-data = cp.Collect(num_samples)
+#data = cp.Collect(num_samples)
 #one,two,three,four,five,none = data
 
 # data = [one,two,three,four,five,none] list of classes of images 

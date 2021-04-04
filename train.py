@@ -12,7 +12,7 @@ import numpy as np
 m = mod.Modelling();
 
 # Capturing -----------------------------------------------------------------------------------------
-num_samples = 10
+num_samples = 200
 
 data = cp.Collect(num_samples)
 images = Preprocess.convert(data)
@@ -60,6 +60,11 @@ trainX = np.array(trainX,dtype="float") / 255.0
 testX = np.array(testX,dtype="float") / 255.0
 
 
+trainX = np.array(trainX)
+trainY = np.array(trainY)
+testX = np.array(testX)
+testY = np.array(testY)
+
 augment = ImageDataGenerator( 
             
                 rotation_range=30,
@@ -69,15 +74,15 @@ augment = ImageDataGenerator(
                 shear_range=0.10,
                 horizontal_flip=False,
                 data_format = "channels_last",
-                fill_mode="nearest"
+                fill_mode="nearest",
 )
 
 
 epochs = 15
-batchsize = 20
+batchsize = 6
     
     
-m.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+m.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_hinge', metrics=['accuracy'])
 
 history = m.fit(x=augment.flow(trainX, trainY, batch_size=batchsize), validation_data=(testX, testY), 
 steps_per_epoch= len(trainX) // batchsize, epochs=epochs)
