@@ -3,13 +3,13 @@ from capture import Capture as cp
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
+num_samples = 5
 
-#data = cp.Collect()
+data = cp.Collect(num_samples)
 #one,two,three,four,five,none = data
 
 # data = [one,two,three,four,five,none] list of classes of images 
 # images = [1,2,3,4,5,6,7,8.....,60] list of images!!
-
 
 class Preprocess:        
 
@@ -75,7 +75,10 @@ class Preprocess:
     
             markers = cv.watershed(images[i], markers)
             images[i][markers == -1] = [255, 0, 0]
-            lst.append(sure_fg)
+            
+            color = cv.cvtColor(sure_fg, cv.COLOR_GRAY2RGB)
+            lst.append(color)
+            
             
         return lst
 
