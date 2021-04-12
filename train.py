@@ -4,6 +4,9 @@ from preprocess import Preprocess
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.models import Model, load_model
+import cv2
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,7 +15,7 @@ import numpy as np
 m = mod.Modelling();
 
 # Capturing -----------------------------------------------------------------------------------------
-num_samples = 200
+num_samples = 100
 
 data = cp.Collect(num_samples)
 images = Preprocess.convert(data)
@@ -22,8 +25,8 @@ images = Preprocess.convert(data)
 # Preprocessing -------------------------------------------------------------------------------------
 
 blur_images = Preprocess.gaussian(images) # contains list of images of all classess in ascending order
-seg_images = Preprocess.segmentation(blur_images)
-morph_images = Preprocess.morphology(seg_images,images)
+#seg_images = Preprocess.segmentation(blur_images)
+#morph_images = Preprocess.morphology(seg_images,images)
 
 
 # ---------------------------------------------------------------------------------------------------
@@ -40,18 +43,23 @@ labels += [5]*num_samples
 labels += [0]*num_samples
 
 # ---------------------------------------------------------------------------------------------------
+one_hot_labels = to_categorical(labels, 6)
 
-trainX = []
-testX = []
-trainY = []
-testY = []
 
-for i in range(6):
-    (t1, t2, t3, t4) = train_test_split(morph_images[(i*num_samples):((i+1)*num_samples)], labels[(i*num_samples):((i+1)*num_samples)], test_size=0.2, random_state=50)
-    trainX += t1
-    testX += t2
-    trainY += t3
-    testY += t4
+
+#trainX = []
+#testX = []
+#trainY = []
+#testY = []
+
+(trainX, testX, trainY, testY) = train_test_split(blur_images, one_hot_labels, test_size=0.25, random_state=50)
+
+#for i in range(0, 6):
+    #(t1, t2, t3, t4) = train_test_split(morph_images[(i*num_samples):((i+1)*num_samples)], one_hot_labels[(i*num_samples):((i+1)*num_samples)], test_size=0.2, random_state=50)
+    #trainX += t1
+    #testX += t2
+    #trainY += t3
+    #testY += t4
     
 print(trainY)
 print(testY)
@@ -78,11 +86,11 @@ augment = ImageDataGenerator(
 )
 
 
-epochs = 15
-batchsize = 6
+epochs = 9
+batchsize = 20
     
     
-m.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_hinge', metrics=['accuracy'])
+m.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
 
 history = m.fit(x=augment.flow(trainX, trainY, batch_size=batchsize), validation_data=(testX, testY), 
 steps_per_epoch= len(trainX) // batchsize, epochs=epochs)
@@ -112,6 +120,4 @@ plt.legend()
 
 plt.show()
 
-
-
-
+m.save("hc.h5")
