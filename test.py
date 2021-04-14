@@ -3,13 +3,13 @@ from tensorflow import keras
 import cv2 
 import numpy as np
 
-m = keras.models.load_model("T:/PROJECTS/hand-cricket/hc.h5")
+m = keras.models.load_model("hc.h5")
 
 label_names = ['none', '1', '2', '3', '4', '5']
 
 cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1024)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 768)
 box_size = 234
 width = int(cap.get(3))
 

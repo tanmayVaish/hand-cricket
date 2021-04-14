@@ -80,7 +80,7 @@ computer_move="none"
 
 
 
-model = load_model("T:/PROJECTS/hand-cricket/hc.h5")
+model = load_model("hc.h5")
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -221,14 +221,18 @@ while True:
         
     
             
+    
             #change of innings
-            if computer_out:
+            if computer_out or user_score<computer_score:
                 if user_score>computer_score:    
                     winner_flag=1
                     print("WINNER USER")
                 if user_score==computer_score:    
                     winner_flag=0           
                     print("DRAW")
+                if user_score<computer_score:    
+                    winner_flag=2
+                    print("WINNER COMPUTER")    
         
                 startCounter = True
                 startTime = datetime.datetime.now()

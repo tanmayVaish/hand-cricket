@@ -85,7 +85,7 @@ augment = ImageDataGenerator(
 )
 
 
-epochs = 6
+epochs = 9
 batchsize = 20
     
     
@@ -119,4 +119,4 @@ plt.legend()
 
 plt.show()
 
-m.save("T:/PROJECTS/hand-cricket/hc.h5")
+m.save("hc.h5")
