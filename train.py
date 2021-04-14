@@ -85,7 +85,7 @@ augment = ImageDataGenerator(
 )
 
 
-epochs = 9
+epochs = 6
 batchsize = 20
     
     

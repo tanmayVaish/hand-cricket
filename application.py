@@ -123,7 +123,7 @@ while True:
     frame = cv2.flip(frame,1)
     
     # user's space
-    cv2.rectangle(field,(800,100), (1200,500), (255,255,255), 2)
+    cv2.rectangle(field,(300,80), (1024,768), (255,255,255), 2)
        
     # extracting user's image
     user_frame = frame[100:500, 800:1200]
@@ -250,10 +250,10 @@ while True:
                     hand_inside = True
                     computer_move = choice(['1','2','3','4','5'])
                     
-                    total_score = calculate_score(computer_move,user_move,total_run)
+                    total_score = calculate_score(user_move,computer_move,total_run)
                     
                     if total_score!="Out":
-                        computer_score=int(total_score)
+                        user_score=int(total_score)
                 
                 elif user_move == "none":
                     hand_inside = False
@@ -331,7 +331,7 @@ while True:
                 
     field[100:500, 800:1200]=user_frame
    
-    cv2.putText(field, "Press key 'n' for next ball" , (370, 700), font, 1.2, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(field, "Take out your hand from the box for next ball" , (200, 700), font, 1.2, (255, 255, 255), 2, cv2.LINE_AA)
     cv2.imshow("Handy cricket", field)
     
     #To end the game press 'q'

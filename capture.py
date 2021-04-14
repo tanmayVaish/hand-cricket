@@ -10,8 +10,8 @@ class Capture:
         
         global one,two,three,four,five,none
         capture = cv.VideoCapture(0)
-        capture.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
-        capture.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
+        capture.set(cv.CAP_PROP_FRAME_WIDTH, 1024)
+        capture.set(cv.CAP_PROP_FRAME_HEIGHT, 768)
     
         count = 0
         switch = False
