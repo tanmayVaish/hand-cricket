@@ -10,6 +10,8 @@ class Capture:
         
         global one,two,three,four,five,none
         capture = cv.VideoCapture(0)
+        capture.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
+        capture.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
     
         count = 0
         switch = False
@@ -74,27 +76,27 @@ class Capture:
                  
             if k == ord('1'):
                 switch = not switch
-                class_name = "one" # this is defined for eval(): This will represent the one[]
+                class_name = "1" # this is defined for eval(): This will represent the one[]
                 one = []
                 
             if k == ord('2'):
                 switch = not switch
-                class_name = "two"
+                class_name = "2"
                 two = []
                 
             if k == ord('3'):
                 switch = not switch
-                class_name = "three"
+                class_name = "3"
                 three = []
                 
             if k == ord('4'):
                 switch = not switch
-                class_name = "four"
+                class_name = "4"
                 four = []
             
             if k == ord('5'):
                 switch = not switch
-                class_name = "five"
+                class_name = "5"
                 five = []
             if k == ord('n'):
                 switch = not switch

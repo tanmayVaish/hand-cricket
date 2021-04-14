@@ -28,7 +28,6 @@ blur_images = Preprocess.gaussian(images) # contains list of images of all class
 #seg_images = Preprocess.segmentation(blur_images)
 #morph_images = Preprocess.morphology(seg_images,images)
 
-
 # ---------------------------------------------------------------------------------------------------
 
 
@@ -120,4 +119,4 @@ plt.legend()
 
 plt.show()
 
-m.save("hc.h5")
+m.save("T:/PROJECTS/hand-cricket/hc.h5")
