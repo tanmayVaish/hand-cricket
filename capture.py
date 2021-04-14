@@ -51,7 +51,21 @@ class Capture:
             if switch == True:
                 
                 ROI = frame[5: box_size-5 , width-box_size+5: width-5] # LFU
-                eval(class_name).append([ROI])
+                
+                if class_name == "1":
+                    one.append([ROI])
+                if class_name == "2":
+                    two.append([ROI])
+                if class_name == "3":
+                    three.append([ROI])
+                if class_name == "4":
+                    four.append([ROI])
+                if class_name == "5":
+                    five.append([ROI])
+                    
+                if class_name == "none":
+                    none.append([ROI])
+                
                     
                 # Increment the counter 
                 count += 1 

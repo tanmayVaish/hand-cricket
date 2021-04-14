@@ -5,7 +5,7 @@ import numpy as np
 
 m = keras.models.load_model("T:/PROJECTS/hand-cricket/hc.h5")
 
-label_names = ['none', 'one', 'two', 'three', 'four', 'five']
+label_names = ['none', '1', '2', '3', '4', '5']
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)

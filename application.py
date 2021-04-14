@@ -231,7 +231,7 @@ while True:
                     print("DRAW")
         
                 startCounter = True
-                startTime = datetime.now()
+                startTime = datetime.datetime.now()
                 counter=counter+1
                 computer_out=0
     
@@ -264,7 +264,7 @@ while True:
                     computer_move = "none"
             else:
                 user_out=1
-                startTime = datetime.now()  
+                startTime = datetime.datetime.now()  
                 total_score="0"
                 
                 
@@ -296,12 +296,12 @@ while True:
                     display_out(field,cv2,font)
     #                cv2.putText(field, "User: OUT!!", (500, 250), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
     
-                    timeElapsed = (datetime.now() - startTime).total_seconds()
+                    timeElapsed = (datetime.datetime.now() - startTime).total_seconds()
             
                     if timeElapsed >= 1:
                         nSecond += 1
                         timeElapsed = 0
-                        startTime = datetime.now()
+                        startTime = datetime.datetime.now()
                 else:
                     startTime = 0.0
                     timeElapsed = 0.0
@@ -313,12 +313,12 @@ while True:
     #        nSecond=0
             if nSecond < totalSec:
                 display_winner(winner_flag,field,cv2,font)
-                timeElapsed = (datetime.now() - startTime).total_seconds()
+                timeElapsed = (datetime.datetime.now() - startTime).total_seconds()
                 
                 if timeElapsed >= 1:
                     nSecond += 1
                     timeElapsed = 0
-                    startTime = datetime.now()
+                    startTime = datetime.datetime.now()
             else:
                 startCounter = False
                 nSecond = 1
