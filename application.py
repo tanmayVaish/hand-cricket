@@ -173,7 +173,7 @@ while True:
                 
                 
             if cmp_move != "none":
-                cmp_emoji = cv2.imread("icons/{}.png".format(cmp_move))
+                cmp_emoji = cv2.imread("icons/{}.jpg".format(cmp_move))
                 cmp_emoji = cv2.resize(cmp_emoji,(400,400))
                 stadium[100:500, 100:500] = cmp_emoji
                     
@@ -244,7 +244,7 @@ while True:
                 
                 
             if cmp_move != "none":
-                cmp_emoji = cv2.imread("icons/{}.png".format(cmp_move))
+                cmp_emoji = cv2.imread("icons/{}.jpg".format(cmp_move))
                 cmp_emoji = cv2.resize(cmp_emoji,(400,400))
                 stadium[100:500, 100:500] = cmp_emoji
                     
