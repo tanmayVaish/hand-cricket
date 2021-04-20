@@ -1,54 +1,40 @@
-import os
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-import time
-from statistics import mode, StatisticsError
-import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.models import Model, load_model
-from tensorflow.keras.layers import Dense,MaxPool2D,Dropout,Flatten,Conv2D,GlobalAveragePooling2D,Activation
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.utils import to_categorical
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
+from statistics import StatisticsError
+from tensorflow.keras.models import load_model
 
 import datetime
 
-from random import choice,shuffle
+from random import choice
 from scipy import stats as st
 
 from collections import deque
 
-font = cv2.FONT_HERSHEY_COMPLEX
+font = cv2.FONT_HERSHEY_DUPLEX
 
-
-def display_winner(winner_flag,field,cv2,font):
+#Display the winner
+def display_winner(winner_flag,stadium,cv2,font):
     if winner_flag==0:
-        cv2.putText(field, "Draw", (500, 550), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
+        cv2.putText(stadium, "Draw", (500, 550), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
 
     elif winner_flag==1:
-        cv2.putText(field, "Winner: User", (495, 550), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
+        cv2.putText(stadium, "Winner: User", (495, 550), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
 
     elif winner_flag==2:
-        cv2.putText(field, "Winner: Computer", (455, 550), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
+        cv2.putText(stadium, "Winner: Computer", (455, 550), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
 
-        
-def display_out(field,cv2,font):
-    cv2.putText(field, "User: OUT!!", (550, 400), font, 1.2, (0,0,255), 2, cv2.LINE_AA)
+
+def display_out(stadium,cv2,font):
+    cv2.putText(stadium, "User: OUT!!", (550, 400), font, 1.2, (0,0,255), 2, cv2.LINE_AA)
 
 #Calculate and Update score
-def calculate_score(move1, move2,total_run):
-
+def calculate_score(move1, move2,total_runs):
     if move1 == move2:
         return "Out"
     else:       
-        return str(total_run+int(move1))
+        return str(total_runs+int(move1))
 
-
-
-CLASS_REV_MAP = {
+run_dict = {
     0: "none",
     1: "1",
     2: "2",
@@ -58,23 +44,22 @@ CLASS_REV_MAP = {
 }
     
 def mapper(index):
-    return CLASS_REV_MAP[index]
+    return run_dict[index]
 
-
-total_run=0
+total_runs=0
 total_score="0"
 user_score=0
-computer_score=0
-counter=0
+cmp_score=0
+flag=0
 user_out=0
-computer_out=0
+cmp_out=0
 winner_flag=-1
 startCounter = False
 startTime = 0.0
 timeElapsed = 0.0
 nSecond = 0
 totalSec = 3
-computer_move="none"
+cmp_move="none"
 
 
 
@@ -90,13 +75,13 @@ width = int(cap.get(3))
 
 
 # Initially the moves will be `none`
-computer_move= "none"
+cmp_move= "none"
 user_move = "none"
 
 label_names = ['none', '1', '2', '3','4','5']
 
 # All scores are 0 at the start.
-computer_score, user_score = 0, 0
+cmp_score, user_score = 0, 0
 
 # The default color of bounding box is Blue
 rect_color = (255, 0, 0)
@@ -116,14 +101,14 @@ de = deque(['none'] * 5, maxlen=smooth_factor)
 
 while True:
     
-    field = cv2.imread("field.png")
+    stadium = cv2.imread("stadium.jpg")
     ret, frame = cap.read()
     if not ret:
         continue
     frame = cv2.flip(frame,1)
     
     # user's space
-    cv2.rectangle(field,(300,80), (1024,768), (255,255,255), 2)
+    cv2.rectangle(stadium,(300,80), (1024,768), (255,255,255), 2)
        
     # extracting user's image
     user_frame = frame[100:500, 800:1200]
@@ -137,11 +122,7 @@ while True:
     
     # Get the index of the predicted class
     move_code = np.argmax(pred[0])
-    
-    #####################
-    # all ok till here
-    #####################
-    
+
     # Get the class name of the predicted class
     user_move = label_names[move_code]
     
@@ -161,32 +142,23 @@ while True:
         except StatisticsError:
             print('Stats error')
             continue
-        
-        
-        #####################
-        # all ok till here
-        #####################
-             
 
-        # from here i am going to make the inning system using counter variable.
-
-
-
+        #The Inning system works using the flag variable.
         #Computer_batting 
-        if counter%2 == 1:
+        if flag%2 == 1:
             
-            cv2.putText(field, "Computer's Batting", (465, 650), font, 1.2, (255,255,0), 2, cv2.LINE_AA)
+            cv2.putText(stadium, "Computer's Batting", (465, 650), font, 1.2, (255,255,0), 2, cv2.LINE_AA)
             
             if total_score != "Out":
                 if user_move != "none" and hand_inside == False:
                             
                     hand_inside = True
-                    computer_move = choice(['1','2','3','4','5'])
+                    cmp_move = choice(['1','2','3','4','5'])
                     
-                    total_score = calculate_score(computer_move,user_move,total_run)
+                    total_score = calculate_score(cmp_move,user_move,total_runs)
                     
                     if total_score!="Out":
-                        computer_score=int(total_score)
+                        cmp_score=int(total_score)
                 
                 elif user_move == "none":
                     
@@ -194,67 +166,66 @@ while True:
                 
                 
                 else:
-                    computer_move = "none"
+                    cmp_move = "none"
             else:
-                computer_out=1
+                cmp_out=1
                 total_score="0"
                 
                 
-            if computer_move != "none":
-                computer_emoji = cv2.imread("icons/{}.png".format(computer_move))
-                print(computer_emoji)
-                computer_emoji = cv2.resize(computer_emoji,(400,400))
-                field[100:500, 100:500] = computer_emoji
+            if cmp_move != "none":
+                cmp_emoji = cv2.imread("icons/{}.png".format(cmp_move))
+                cmp_emoji = cv2.resize(cmp_emoji,(400,400))
+                stadium[100:500, 100:500] = cmp_emoji
                     
                 
 
 
             #increasing score
             if total_score!="Out":
-                total_run=int(total_score)
+                total_runs=int(total_score)
         
             # displaying the information
-            cv2.putText(field,"User Move: " + user_move, (840, 50), font, 1.2, (0, 255, 255),2,cv2.LINE_AA)
-            cv2.putText(field, "Computer Move: " + computer_move, (65, 50), font, 1.2, (0, 255, 255), 2, cv2.LINE_AA)
-            cv2.putText(field, "Computer score: " + str(computer_score), (70, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
-            cv2.putText(field, "User score: " + str(user_score), (840, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(stadium,"User Move: " + user_move, (840, 50), font, 1.2, (0, 255, 255),2,cv2.LINE_AA)
+            cv2.putText(stadium, "Computer Move: " + cmp_move, (65, 50), font, 1.2, (0, 255, 255), 2, cv2.LINE_AA)
+            cv2.putText(stadium, "Computer score: " + str(cmp_score), (70, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(stadium, "User score: " + str(user_score), (840, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
         
     
             
     
             #change of innings
-            if computer_out or user_score<computer_score:
-                if user_score>computer_score:    
+            if cmp_out or user_score<cmp_score:
+                if user_score>cmp_score:    
                     winner_flag=1
                     print("WINNER USER")
-                if user_score==computer_score:    
+                if user_score==cmp_score:    
                     winner_flag=0           
                     print("DRAW")
-                if user_score<computer_score:    
+                if user_score<cmp_score:    
                     winner_flag=2
                     print("WINNER COMPUTER")    
         
                 startCounter = True
                 startTime = datetime.datetime.now()
-                counter=counter+1
-                computer_out=0
+                flag=flag+1
+                cmp_out=0
     
     
 
 
 
         #User_batting 
-        if counter%2 == 0:
+        if flag%2 == 0:
             
-            cv2.putText(field, "User's Batting", (465, 650), font, 1.2, (255,255,0), 2, cv2.LINE_AA)
+            cv2.putText(stadium, "User's Batting", (465, 650), font, 1.2, (255,255,0), 2, cv2.LINE_AA)
             
             if total_score != "Out":
                 if user_move != "none" and hand_inside == False:
                             
                     hand_inside = True
-                    computer_move = choice(['1','2','3','4','5'])
+                    cmp_move = choice(['1','2','3','4','5'])
                     
-                    total_score = calculate_score(user_move,computer_move,total_run)
+                    total_score = calculate_score(user_move,cmp_move,total_runs)
                     
                     if total_score!="Out":
                         user_score=int(total_score)
@@ -265,28 +236,28 @@ while True:
                 
                 
                 else:
-                    computer_move = "none"
+                    cmp_move = "none"
             else:
                 user_out=1
                 startTime = datetime.datetime.now()  
                 total_score="0"
                 
                 
-            if computer_move != "none":
-                computer_emoji = cv2.imread("icons/{}.png".format(computer_move))
-                computer_emoji = cv2.resize(computer_emoji,(400,400))
-                field[100:500, 100:500] = computer_emoji
+            if cmp_move != "none":
+                cmp_emoji = cv2.imread("icons/{}.png".format(cmp_move))
+                cmp_emoji = cv2.resize(cmp_emoji,(400,400))
+                stadium[100:500, 100:500] = cmp_emoji
                     
             #increasing score
             if total_score!="Out":
-                total_run=int(total_score)   
+                total_runs=int(total_score)   
 
 
             # displaying the information
-            cv2.putText(field,"User Move: " + user_move, (840, 50), font, 1.2, (0, 255, 255),2,cv2.LINE_AA)
-            cv2.putText(field, "Computer Move: " + computer_move, (65, 50), font, 1.2, (0, 255, 255), 2, cv2.LINE_AA)
-            cv2.putText(field, "Computer score: " + str(computer_score), (70, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
-            cv2.putText(field, "User score: " + str(user_score), (840, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(stadium,"User Move: " + user_move, (840, 50), font, 1.2, (0, 255, 255),2,cv2.LINE_AA)
+            cv2.putText(stadium, "Computer Move: " + cmp_move, (65, 50), font, 1.2, (0, 255, 255), 2, cv2.LINE_AA)
+            cv2.putText(stadium, "Computer score: " + str(cmp_score), (70, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(stadium, "User score: " + str(user_score), (840, 600), font, 1.2, (0, 0, 255), 2, cv2.LINE_AA)
     
 
 
@@ -297,8 +268,8 @@ while True:
                 
                 if nSecond < totalSec:
                     
-                    display_out(field,cv2,font)
-    #                cv2.putText(field, "User: OUT!!", (500, 250), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
+                    display_out(stadium,cv2,font)
+    #                cv2.putText(stadium, "User: OUT!!", (500, 250), font, 1.2, (0,128,255), 2, cv2.LINE_AA)
     
                     timeElapsed = (datetime.datetime.now() - startTime).total_seconds()
             
@@ -310,13 +281,13 @@ while True:
                     startTime = 0.0
                     timeElapsed = 0.0
                     nSecond = 1
-                    counter=counter+1
+                    flag=flag+1
                     user_out=0
                 
         if startCounter:
     #        nSecond=0
             if nSecond < totalSec:
-                display_winner(winner_flag,field,cv2,font)
+                display_winner(winner_flag,stadium,cv2,font)
                 timeElapsed = (datetime.datetime.now() - startTime).total_seconds()
                 
                 if timeElapsed >= 1:
@@ -331,12 +302,12 @@ while True:
                 nSecond = 1
                 winner_flag = -1
                 user_score=0
-                computer_score=0
+                cmp_score=0
                 
-    field[100:500, 800:1200]=user_frame
+    stadium[100:500, 800:1200]=user_frame
    
-    cv2.putText(field, "Take out your hand from the box for next ball" , (200, 700), font, 1.2, (255, 255, 255), 2, cv2.LINE_AA)
-    cv2.imshow("Handy cricket", field)
+    cv2.putText(stadium, "Take out your hand from the box for next ball" , (200, 700), font, 1.2, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.imshow("Handy cricket", stadium)
     
     #To end the game press 'q'
     k = cv2.waitKey(10)
